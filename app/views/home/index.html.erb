@@ -1,0 +1,78 @@
+<script>
+ counter = function() {var value = $('#text').val();
+    if (value.length == 0) {
+        $('#wordCount').html(0);
+        $('#totalChars').html(0);
+        $('#charCount').html(0);
+        $('#charCountNoSpace').html(0);
+        return;
+    }
+    var regex = /\s+/gi;
+    var wordCount = value.trim().replace(regex, ' ').split(' ').length;
+    var totalChars = value.length;
+    var charCount = value.trim().length;
+    var charCountNoSpace = value.replace(regex, '').length;
+    $('#wordCount').html(wordCount);
+    $('#totalChars').html(totalChars);
+    $('#charCount').html(charCount);
+    $('#charCountNoSpace').html(charCountNoSpace);
+};
+$(document).ready(function() {
+    $('#count').click(counter);
+    $('#text').change(counter);
+    $('#text').keydown(counter);
+    $('#text').keypress(counter);
+    $('#text').keyup(counter);
+    $('#text').blur(counter);
+    $('#text').focus(counter);
+});</script>
+
+<body style="background-image: url(http://postfiles7.naver.net/20160504_150/gmlwh0716_1462289907927xrH1V_JPEG/KakaoTalk_20160504_003544760.jpg?type=w3);
+             background-size: cover;
+             background-repeat: no-repeat;">
+ 
+ <iframe frameborder="0" height="1" width="1" src="https://www.youtube.com/embed/MGOq21mIkqg?rel=0&autoplay=1"> </iframe>
+<h1 style="margin-top:40px; text-align:center; color:white; text-shadow: text-shadow: 0 0 20px #fff,
+		 0 0 30px #fff,
+		 0 0 40px #ff00de; font-family:Imapct; font-weight:bold;
+		 "> B O A R D </h1></div>
+<div class="container">
+ <form style="margin-top:40px" action='/home/write' method="POST">
+ <div class="form-group">
+     <label for="exampleInputEmail1">제목</label>
+     <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="제목">
+ </div>
+ <label for="exampleInputEmail1">내용</label>
+     <textarea name="content" class="form-control" rows="5" id="text"></textarea>
+     <div style="text-align:right">단어 개수: <span id="wordCount">0</span>
+            총 글자 수(공백 포함): <span id="totalChars">0</span>
+            글자 수(공백 제외): <span id="charCountNoSpace">0</span></div>
+     <br>
+ <button type="submit" class="btn btn-default" style="margin-top:20px">전송</button>
+ </form>
+<br>
+<br>
+<hr>
+ <% @post.each do |p| %>
+     <div class="well">
+     <span style="font-weight:bold;"><%= p.title %></span><br>
+     <%= p.content %><br>
+     <%= p.created_at %>
+     <hr>
+        <% p.replies.each do |r| %>
+        <%= r.content %><br>
+        <%= r.created_at %>
+        <br>
+        <br>
+        <% end %>
+         <form action='/home/reply_write' method="POST">
+         <input type="hidden" value="<%= p.id%>" name="id_of_post">
+         <label for="exampleInputEmail1">댓글</label>
+         <textarea name="content" class="form-control" rows="2" id="commit"></textarea>
+         <button type="submit" class="btn btn-default" style="margin-top:20px">전송</button>
+         </form>
+     </div>
+ <% end %>
+
+</div>
+</body>
